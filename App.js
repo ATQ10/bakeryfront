@@ -2,13 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import ArticuloScreen from './screens/ArticuloScreen';
 import CatalogoScreen from './screens/CatalogoScreen';
+import EditarArtScreen from './screens/EditarArtScreen';
 import MenuScreen from './screens/MenuScreen';
 
 export default function App() {
   return (
     //<ArticuloScreen></ArticuloScreen>
     //<CatalogoScreen></CatalogoScreen>
-    <MenuScreen></MenuScreen>
+    //<MenuScreen></MenuScreen>
+    <EditarArtScreen></EditarArtScreen>
   );
 }
 
