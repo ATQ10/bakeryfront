@@ -41,7 +41,7 @@ export default function CatalogoScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Catalogo</Text>
+                <Text style={styles.title}>Catálogo</Text>
                 <TouchableOpacity>
                     <Text style={styles.title}>+</Text>
                 </TouchableOpacity>
@@ -53,6 +53,7 @@ export default function CatalogoScreen() {
                 data={listProducts}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
+                showsVerticalScrollIndicator={false}
             />
         </View>
     );
