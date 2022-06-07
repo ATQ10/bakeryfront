@@ -1,20 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import ArticuloScreen from './screens/ArticuloScreen';
+import CatalogoScreen from './screens/CatalogoScreen';
+import MenuScreen from './screens/MenuScreen';
 
 export default function App() {
   return (
-    <ArticuloScreen></ArticuloScreen>
+    //<ArticuloScreen></ArticuloScreen>
+    //<CatalogoScreen></CatalogoScreen>
+    <MenuScreen></MenuScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
 });
 {/*
     <View style={styles.container}>
