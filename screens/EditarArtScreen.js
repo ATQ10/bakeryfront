@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import Constants from 'expo-constants';
+const productService = require('../services/productService');
 
 function checkValidUrl (url) {
   var types = ['jpg','jpeg','tiff','png','gif','bmp'];
   let defaultImg = 'https://cutewallpaper.org/24/no-image-png/757119977.jpg';
-  if (!(url === null)) {
+  if (!(url === null) && url != undefined) {
     var parts = url.split('.');
     var extension = parts[parts.length-1];
     return (types.indexOf(extension) !== -1) ? url : defaultImg;
@@ -15,14 +16,39 @@ function checkValidUrl (url) {
   
 }
 
-const EditarArtScreen =()=>{
-  const [txtURL, onChangeText0] = React.useState(null);
-  const [txtTitulo, onChangeText1] = React.useState(null);
-  const [txDescripcion, onChangeText2] = React.useState(null);
-  const [txtPrecio, onChangeText3] = React.useState(null);
-  const [txtIngredientes, onChangeText4] = React.useState(null);
-  const [txtOrigen, onChangeText5] = React.useState(null);
+export default function EditarArtScreen() {
 
+  const [product, setProduct] = useState({});
+  
+    useEffect(() => {
+      getProduct()
+    }, [])
+  
+    const getProduct = async() => {
+      // Obtener datos con la API y pasarlos a setProduct por ID
+      const prod = await productService.getByID("629fa5268fe58566d06f7e22");
+      setProduct(
+          prod
+      )
+    }  
+  
+  var [txtURL, onChangeText0] = React.useState(null);
+  var [txtTitulo, onChangeText1] = React.useState(null);
+  var [txDescripcion, onChangeText2] = React.useState(null);
+  var [txtPrecio, onChangeText3] = React.useState(null);
+  var [txtIngredientes, onChangeText4] = React.useState(null);
+  var [txtOrigen, onChangeText5] = React.useState(null);  
+  
+  
+
+  /*
+  txtTitulo = product.Name;
+  txtURL = product.Img;
+  txDescripcion = product.Description;
+  txtPrecio = "$"+product.Price;
+  txtIngredientes = product.Ingredients;
+  txtOrigen = product.Origin;
+  */
     return (
       <View style={ArticuloStyle.container}>
         <View style={ArticuloStyle.header}></View>
@@ -203,6 +229,7 @@ const ArticuloStyle = StyleSheet.create({
 const EditarArtStyles = StyleSheet.create({
   input: {
     flex: 2,
+    height: 35,
     margin: 12,
     borderRadius: 5,
     borderWidth: 1,
@@ -223,4 +250,3 @@ const EditarArtStyles = StyleSheet.create({
     padding: 10,
   },
 });
-export default EditarArtScreen;

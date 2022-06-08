@@ -8,9 +8,9 @@ import MenuScreen from './screens/MenuScreen';
 export default function App() {
   return (
     //<ArticuloScreen></ArticuloScreen>
-    //<CatalogoScreen></CatalogoScreen>
+    <CatalogoScreen></CatalogoScreen>
     //<MenuScreen></MenuScreen>
-    <EditarArtScreen></EditarArtScreen>
+    //<EditarArtScreen></EditarArtScreen>
   );
 }
 
