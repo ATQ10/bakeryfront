@@ -1,13 +1,48 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity,ImageBackground, TextInput} from 'react-native';
 
-import fondo from '../assets/fondocool.jpg'
-import molino from '../assets/molino.png'
+import {fondo} from '../assets/fondocool.jpg'
+import {molino} from '../assets/molino.png'
+
+import {login} from '../services/authService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+
 
 const LoginScreen =()=>{
+  const navigation = useNavigation();
 //VARIABLES PARA LOS INPUT 
   const [usuario, setUsuario] = useState('admin');
   const[contraseña, setContraseña]= useState('12345');
+
+  async function makeLogin (){
+    if(usuario=='' || contraseña==''){
+      alert("Completa el formulario")
+    }else{
+      const response = await login(usuario, contraseña);
+      if(response!=undefined){
+        if(response.accessToken!=undefined){
+          try {
+            const a = await AsyncStorage.setItem('auth_token', JSON.stringify(response.accessToken))
+            
+            //redireccionar a otra pagina
+            navigation.navigate('Menu')
+          } catch (e) {
+            console.log(e)
+          }
+        }else{
+          alert(response.message)
+        }
+        
+
+      }else{
+        //mostrar mensaje de error
+        alert('Error en el login')
+
+      }
+    }
+    
+  }
 
     return (       
       <ImageBackground source={fondo} blurRadius={4} style={LoginStyle.back}>
@@ -31,7 +66,7 @@ const LoginScreen =()=>{
                                           onChangeText={(val)=> setContraseña(val)}
                                           secureTextEntry={true}/>
                       
-                              <TouchableOpacity>
+                              <TouchableOpacity onPress={makeLogin}>
                                     <View style={LoginStyle.boton}>
                                     <Text style={LoginStyle.txtbtn}>Ingresar</Text>
                                     </View>
@@ -53,7 +88,7 @@ const LoginStyle = StyleSheet.create({
    back: {
    flex: 1, 
    paddingHorizontal: 30, 
-   paddingVertical: 50, 
+   paddingBottom: 100, 
  },
   
  contenido: {
@@ -65,19 +100,22 @@ const LoginStyle = StyleSheet.create({
  rectangulo: {
    flex:1,
    backgroundColor: 'white',
-   borderRadius: 20, 
+   borderRadius: 50, 
    width: '90%',
+   maxHeight: '60%',
    alignContent: 'center', 
    paddingVertical: 30, 
    paddingHorizontal: 40
  }, 
  
   logo: { //molino
-     alignSelf: 'center', 
-    width: 100, 
-    height: 100, 
+    position: 'relative',
+    top:'5%',
+    zIndex:100,
+    width: 160, 
+    height: 160, 
     marginTop: 30,
-    borderRadius: 50
+    borderRadius: 100
  },
 
  titulo: {
@@ -85,13 +123,11 @@ const LoginStyle = StyleSheet.create({
    fontSize: 40, 
    fontWeight: 'bold',
    color: '#7D4F50', 
-   fontFamily: 'sans-serif',
    textAlign: 'center'
   }, 
 
   texto: {
     marginTop: 20,
-    fontFamily: 'sans-serif', 
     fontSize: 20, 
     color: '#72715C'
   },
@@ -123,8 +159,8 @@ const LoginStyle = StyleSheet.create({
   ingresarTexto: {
     height: 40,
     width: 190,
-    margin: 10,
-    borderWidth: 1,
+    margin: 0,
+    borderBottomWidth: 1,
     padding: 7,
   }
 });

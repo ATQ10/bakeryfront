@@ -6,15 +6,17 @@ import EditarArtScreen from './screens/EditarArtScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import LoginScreen from './screens/LoginScreen';
 import MenuScreen from './screens/MenuScreen';
+import MainStack from './navigation/MainStack';
 
 export default function App() {
   return (
+    <MainStack/>
     //<ArticuloScreen></ArticuloScreen>
    // <CatalogoScreen></CatalogoScreen>
     //<MenuScreen></MenuScreen>
     //<EditarArtScreen></EditarArtScreen>
   //  <LoginScreen></LoginScreen>
-    <LoadingScreen></LoadingScreen>
+    //<LoginScreen></LoginScreen>
   );
 }
 
