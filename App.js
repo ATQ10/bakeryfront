@@ -3,14 +3,18 @@ import { StyleSheet, Text, View } from 'react-native';
 import ArticuloScreen from './screens/ArticuloScreen';
 import CatalogoScreen from './screens/CatalogoScreen';
 import EditarArtScreen from './screens/EditarArtScreen';
+import LoadingScreen from './screens/LoadingScreen';
+import LoginScreen from './screens/LoginScreen';
 import MenuScreen from './screens/MenuScreen';
 
 export default function App() {
   return (
     //<ArticuloScreen></ArticuloScreen>
-    <CatalogoScreen></CatalogoScreen>
+   // <CatalogoScreen></CatalogoScreen>
     //<MenuScreen></MenuScreen>
     //<EditarArtScreen></EditarArtScreen>
+  //  <LoginScreen></LoginScreen>
+    <LoadingScreen></LoadingScreen>
   );
 }
 
