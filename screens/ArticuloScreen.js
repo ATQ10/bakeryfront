@@ -1,37 +1,37 @@
 import React, { Component, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import Constants from 'expo-constants';
+import {useNavigation, NavigationContainer} from '@react-navigation/native';
+
 const productService = require('../services/productService');
 
-export default function ArticuloScreen() {
-  
-  const [product, setProduct] = useState({});
+export default function ArticuloScreen({route}) {
+  const navigation = useNavigation();
 
+  const [product, setProduct] = useState({});
+  const { idProduct } = route.params;
+  
   useEffect(() => {
     getProduct()
   }, [])
 
   const getProduct = async() => {
     // Obtener datos con la API y pasarlos a setProduct
+    const prod = await productService.getByID(idProduct);
 
-    // OPCIONES
-    const prod = await productService.getByID("629fa5268fe58566d06f7e22");
-    //const prod = await productService.getByID("629fe8abfef5fe860bfd3054");
-    //const prod = await productService.getByID("629fe909fef5fe860bfd3058");
-    //const prod = await productService.getByID("629fe981fef5fe860bfd305c");
-    //const prod = await productService.getByID("629fe9c7fef5fe860bfd305f");
-    //const prod = await productService.getByID("629fea00fef5fe860bfd3062");
-    //const prod = await productService.getByID("629fee31fef5fe860bfd3073");
-    //const prod = await productService.getByID("629fefa0fef5fe860bfd3077");
-
-    setProduct(
-        prod
-    )
+    setProduct(prod)
   }  
+
+  const goBack = () => {
+    navigation.goBack()
+  }
 
   return (
       <View style={ArticuloStyle.container}>
-        <View style={ArticuloStyle.header}></View>
+        <View style={ArticuloStyle.header}>
+          <TouchableOpacity onPress={goBack}>
+            <Text style={ArticuloStyle.title2}>&lt;</Text>
+          </TouchableOpacity>
+        </View>
         <View style={ArticuloStyle.image}>
           <Image
           style={ArticuloStyle.imageStyle}
@@ -97,11 +97,16 @@ const ArticuloStyle = StyleSheet.create({
     
 
   },
+  title2: {
+    color: "#fff",
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
   header: {
     flex: 2,
     backgroundColor: '#7D4F50',
-    alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 25
   },
   image: {
     flex: 4,

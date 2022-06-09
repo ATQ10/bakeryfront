@@ -1,5 +1,7 @@
 import { Text, View, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native'
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Icon
 import userIcon from '../assets/user.png'
@@ -10,7 +12,10 @@ import purchaseIcon from '../assets/purchase.png'
 import inventoryImg from '../assets/inventory.jpg'
 
 export default function MenuScreen() {
+    const productService = require('../services/productService');
 
+    const navigation = useNavigation();
+    
     const [user, setUser] = useState({})
 
     useEffect(() => {
@@ -28,22 +33,43 @@ export default function MenuScreen() {
     const [listProducts, setListProducts] = useState([])
 
     const getProducts = async() => {
-        // Obtener 3 Productos con la API y pasarlos a setList
-        setListProducts([
-            { name: 'Cuernito', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c0a7.png', id: '1'},
-            { name: 'Baguette', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c09c.png', id: '2'},
-            { name: 'Pan', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c0a0.png', id: '3'},
-            { name: 'Panque', urlImg: 'http://assets.stickpng.com/thumbs/5c5bf488e4b8dd029ff259c2.png', id: '4'},
-            { name: 'Semita', urlImg: 'http://assets.stickpng.com/images/5c5bf492e4b8dd029ff259c3.png', id: '5'},
-        ])
+        // Obtener datos con la API y pasarlos a setList
+        var dataProducts = []
+
+        try {
+            const allProducts = await productService.getAll();
+        
+            if (allProducts != null) {
+                allProducts.forEach((product) => {
+                    dataProducts.push({name: product.Name, urlImg: product.Img, id: product._id})
+                })
+            }
+        } catch(e) {
+            console.log(e)
+        }
+
+        setListProducts(dataProducts.slice(0,4))
     }
 
+    const openCatalog = () => {
+        navigation.navigate('Catalogo')
+    }
+
+    const openProduct = (id) => {
+        console.log(id)
+        navigation.navigate('ProductDetails',{idProduct: id})
+    }
+
+    const logOut = async () => {
+        await AsyncStorage.removeItem('auth-token')
+        navigation.navigate('Login')
+    }
     
     const renderItem = ({item}) => (
         <View style={styles.card}>
             <Image style={styles.imgProduct}source={{ uri: item.urlImg } } />
             <Text style={styles.cardName}>{item.name}</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {openProduct(item.id)}}>
                 <View style={styles.button}>
                     <Text style={styles.cardIcon}>Detalle</Text>
                 </View>            
@@ -53,9 +79,9 @@ export default function MenuScreen() {
 
     const renderFooter = () => {
         return(
-            <TouchableOpacity>
+            <TouchableOpacity onPress={openCatalog}>
                 <View style={styles.showMoreIcon}>
-                    <Text style={styles.moreIcon}>Mostrar Más</Text>
+                    <Text style={styles.moreIcon}>Mostrar{"\n"}Más</Text>
                     <Text style={styles.moreIcon}>+</Text>
                 </View>
             </TouchableOpacity>
@@ -66,9 +92,17 @@ export default function MenuScreen() {
         <View style={styles.container}>
             {/* HEADER */}
             <View style={styles.header}>
-                <Image source={userIcon} style={styles.userImg}/>
-                <TouchableOpacity>
-                    <Text style={styles.title}>{user.name}</Text>
+                <View style={styles.btnProfile}>
+                    <Image source={userIcon} style={styles.userImg}/>
+                    <TouchableOpacity>
+                        <Text style={styles.title}>{user.name}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={logOut}>
+                    <View style={styles.btnLogout}>
+                        <Text style={styles.txtBtnLogout}>Logout</Text>
+                    </View>
                 </TouchableOpacity>
             </View>
 
@@ -148,10 +182,29 @@ const styles = StyleSheet.create({
 
     header:  {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         height: 100,
         alignItems: 'center',
         backgroundColor: '#7D4F50',
         paddingHorizontal: 25,
+        paddingTop: '5%'
+    },
+
+    btnProfile: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+
+    btnLogout: {
+        backgroundColor: '#e63946',
+        padding: 10,
+        borderRadius: 20
+    },
+
+    txtBtnLogout: {
+        fontWeight: 'bold',
+        color: '#fff'
     },
 
     title: {
@@ -161,8 +214,8 @@ const styles = StyleSheet.create({
     },
 
     userImg: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         marginRight: 20
     },
 
@@ -199,11 +252,13 @@ const styles = StyleSheet.create({
         shadowOffset: {width: -2, height: 4},
         shadowOpacity: 0.2,
         shadowRadius: 3,
+        elevation: 5,
         alignItems: 'center',
     },
 
     btnMenu2: {
         backgroundColor: '#FFD670',
+        elevation: 5,
     },
 
     circle: {
@@ -217,7 +272,7 @@ const styles = StyleSheet.create({
     imgBtn: {
         width: 20,
         height: 20,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
 
     bigBtn: {
@@ -226,28 +281,32 @@ const styles = StyleSheet.create({
         shadowColor: '#171717',
         shadowOffset: {width: -2, height: 4},
         shadowOpacity: 0.2,
-        shadowRadius: 3
+        shadowRadius: 3,
+        elevation: 3,
+        backgroundColor: "#0000"
     },
 
     products:  {
         flex: 1,
         paddingHorizontal: 10,
-        paddingVertical: 30
+        paddingVertical: 30,
     },
 
     showMoreIcon: {
         backgroundColor: '#fff',
-        padding: 10,
+        paddingVertical: 20,
         borderRadius: 20,
-        height: '100%',
         width: 125,
+        height: '95%',
         marginRight: 30,
         shadowColor: '#171717',
         shadowOffset: {width: -2, height: 4},
         shadowOpacity: 0.2,
         shadowRadius: 3,
+        elevation: 2,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 10
     },
 
     moreIcon: {
@@ -268,8 +327,10 @@ const styles = StyleSheet.create({
         shadowOffset: {width: -2, height: 4},
         shadowOpacity: 0.2,
         shadowRadius: 3,
+        elevation: 2,
         width: '40%',
-        marginRight: 30
+        marginRight: 30,
+        marginBottom: 10
     },
     
     cardName: {

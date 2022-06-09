@@ -1,4 +1,4 @@
-const IP = "192.168.100.3:3030";
+const IP = "bakeryback.herokuapp.com";
 module.exports = {
     create: async function (product) {
         // Opciones por defecto estan marcadas con un *

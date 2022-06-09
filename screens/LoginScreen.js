@@ -1,15 +1,15 @@
 import React , {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity,ImageBackground, TextInput} from 'react-native';
 
-import {fondo} from '../assets/fondocool.jpg'
-import {molino} from '../assets/molino.png'
+import fondo from '../assets/fondocool.jpg'
+import molino from '../assets/molino.png'
 
 import {login} from '../services/authService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
 
-const LoginScreen =()=>{
+const LoginScreen =({})=>{
   const navigation = useNavigation();
 //VARIABLES PARA LOS INPUT 
   const [usuario, setUsuario] = useState('admin');
@@ -45,7 +45,7 @@ const LoginScreen =()=>{
   }
 
     return (       
-      <ImageBackground source={fondo} blurRadius={4} style={LoginStyle.back}>
+      <ImageBackground source={fondo} blurRadius={6} style={LoginStyle.back}>
           <View style={LoginStyle.contenido}>
                  <Image source={molino} style={LoginStyle.logo}></Image>
                       <View  style={LoginStyle.rectangulo}>
@@ -88,8 +88,8 @@ const LoginStyle = StyleSheet.create({
    back: {
    flex: 1, 
    paddingHorizontal: 30, 
-   paddingBottom: 100, 
- },
+   paddingBottom: 100,
+  },
   
  contenido: {
    flex: 1,
@@ -98,22 +98,24 @@ const LoginStyle = StyleSheet.create({
  },
 
  rectangulo: {
-   flex:1,
+   flex: 1,
    backgroundColor: 'white',
    borderRadius: 50, 
    width: '90%',
-   maxHeight: '60%',
+   maxHeight: 500,
    alignContent: 'center', 
    paddingVertical: 30, 
-   paddingHorizontal: 40
+   paddingHorizontal: 50,
+   justifyContent: 'center',
+   alignItems: 'center'
  }, 
  
   logo: { //molino
     position: 'relative',
     top:'5%',
-    zIndex:100,
-    width: 160, 
-    height: 160, 
+    zIndex:120,
+    width: 120, 
+    height: 120, 
     marginTop: 30,
     borderRadius: 100
  },
@@ -127,9 +129,11 @@ const LoginStyle = StyleSheet.create({
   }, 
 
   texto: {
+    width: '100%',
     marginTop: 20,
     fontSize: 20, 
-    color: '#72715C'
+    color: '#72715C',
+    textAlign: 'left'
   },
 
   link: {
@@ -158,7 +162,7 @@ const LoginStyle = StyleSheet.create({
 
   ingresarTexto: {
     height: 40,
-    width: 190,
+    width: '100%',
     margin: 0,
     borderBottomWidth: 1,
     padding: 7,

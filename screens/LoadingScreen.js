@@ -1,11 +1,21 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import Constants from 'expo-constants'
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+
 
 import cargando from '../assets/load.gif'
 import pan from '../assets/panadero.jpg'
 
 const LoadingScreen =()=>{
+
+    const navigation = useNavigation();
+
+    useEffect (() => {
+        setTimeout(() => {
+            navigation.navigate('Login');
+        }, 3000);
+    }, []);
+
     return (
       <View style={LoadingStyle.fondo}>
                  <Image source={pan} style={LoadingStyle.panadero}></Image>

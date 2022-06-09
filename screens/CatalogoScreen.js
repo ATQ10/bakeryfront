@@ -1,12 +1,15 @@
 import { Text, View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { Component, useState, useEffect } from 'react'
-
+import {useNavigation} from '@react-navigation/native';
 
 export default function CatalogoScreen() {
-    const [listProducts, setListProducts] = useState([])
+    const productService = require('../services/productService');
 
-    const displayProduct = (id) => {
-        
+    const [listProducts, setListProducts] = useState([])
+    const navigation = useNavigation();
+
+    const goBack = () => {
+        navigation.goBack()
     }
 
     useEffect(() => {
@@ -15,22 +18,33 @@ export default function CatalogoScreen() {
 
     const getProducts = async() => {
         // Obtener datos con la API y pasarlos a setList
-        setListProducts([
-            { name: 'Cuernito', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c0a7.png', id: '1'},
-            { name: 'Baguette', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c09c.png', id: '2'},
-            { name: 'Pan', urlImg: 'http://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c0a0.png', id: '3'},
-            { name: 'Panque', urlImg: 'http://assets.stickpng.com/thumbs/5c5bf488e4b8dd029ff259c2.png', id: '4'},
-            { name: 'Semita', urlImg: 'http://assets.stickpng.com/images/5c5bf492e4b8dd029ff259c3.png', id: '5'},
-            { name: 'Pan Nata', urlImg: 'http://assets.stickpng.com/thumbs/5c5bf49ce4b8dd029ff259c4.png', id: '6'},
-            { name: 'Pay', urlImg: 'http://assets.stickpng.com/thumbs/5e8e01d563d9ba000492d51e.png', id: '7'}
-        ])
+        var dataProducts = []
+
+        try {
+            const allProducts = await productService.getAll();
+
+            if (allProducts != null) {
+                allProducts.forEach((product) => {
+                    dataProducts.push({name: product.Name, urlImg: product.Img, id: product._id})
+                })
+            }
+        } catch(e) {
+            console.log(e)
+        }
+
+        setListProducts(dataProducts)
+    }
+
+    const openProduct = (id) => {
+        console.log(id)
+        navigation.navigate('ProductDetails',{idProduct: id})
     }
 
     const renderItem = ({item}) => (
         <View style={styles.card}>
             <Image style={styles.imgProduct}source={{ uri: item.urlImg } } />
             <Text style={styles.cardName}>{item.name}</Text>
-            <TouchableOpacity onPress={displayProduct(item.id)}>
+            <TouchableOpacity onPress={() => {openProduct(item.id)}}>
                 <View style={styles.button}>
                     <Text style={styles.cardIcon}>Detalle</Text>
                 </View>            
@@ -41,7 +55,12 @@ export default function CatalogoScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Catálogo</Text>
+                <View style={styles.backBtn}>
+                    <TouchableOpacity onPress={goBack}>
+                        <Text style={styles.title2}>&lt;</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Catálogo</Text>
+                </View>
                 <TouchableOpacity>
                     <Text style={styles.title}>+</Text>
                 </TouchableOpacity>
@@ -74,10 +93,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
     },
 
+    backBtn: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
+
     title: {
         color: "#fff",
         fontSize: 25,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+    },
+
+    title2: {
+        color: "#fff",
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginRight: 10
     },
 
     products:  {
