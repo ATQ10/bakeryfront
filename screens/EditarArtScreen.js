@@ -16,6 +16,19 @@ function checkValidUrl (url) {
   
 }
 
+function createProduct(titulo, url, desc, precio, ingredientes, origen){
+  const p = {
+    "Name": titulo, 
+    "Img": url,
+    "Description": desc,
+    "Price": precio,
+    "Ingredients": ingredientes,
+    "Origin": origen,
+  };
+  productService.create(p);
+  console.log("enviado");
+}
+
 export default function EditarArtScreen() {
 
   const [product, setProduct] = useState({});
@@ -31,6 +44,7 @@ export default function EditarArtScreen() {
           prod
       )
     }  
+    
   
   var [txtURL, onChangeText0] = React.useState(null);
   var [txtTitulo, onChangeText1] = React.useState(null);
@@ -39,8 +53,9 @@ export default function EditarArtScreen() {
   var [txtIngredientes, onChangeText4] = React.useState(null);
   var [txtOrigen, onChangeText5] = React.useState(null);  
   
-  
 
+    // createProduct(p);
+    
   /*
   txtTitulo = product.Name;
   txtURL = product.Img;
@@ -49,6 +64,7 @@ export default function EditarArtScreen() {
   txtIngredientes = product.Ingredients;
   txtOrigen = product.Origin;
   */
+
     return (
       <View style={ArticuloStyle.container}>
         <View style={ArticuloStyle.header}></View>
@@ -56,7 +72,7 @@ export default function EditarArtScreen() {
           <Image
           style={ArticuloStyle.imageStyle}
           source={{
-            uri: checkValidUrl(txtURL),
+            uri: txtURL!="" ? checkValidUrl(txtURL):'https://cutewallpaper.org/24/no-image-png/757119977.jpg',
           }}
           />
       
@@ -126,7 +142,9 @@ export default function EditarArtScreen() {
             />
           </View>
         <View style={ArticuloStyle.buttons}>
-          <TouchableOpacity style={ArticuloStyle.touchableStyle}>
+          <TouchableOpacity style={ArticuloStyle.touchableStyle}
+            //onPress={createProduct( txtTitulo, txtURL, txDescripcion, txtPrecio, txtIngredientes, txtOrigen)}
+            onPress={() => {createProduct( txtTitulo, txtURL, txDescripcion, txtPrecio, txtIngredientes, txtOrigen)}}>
             <Text style={ArticuloStyle.touchableText}>Guardar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={ArticuloStyle.touchableStyle}>
