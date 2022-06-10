@@ -10,11 +10,11 @@ import MainStack from './navigation/MainStack';
 
 export default function App() {
   return (
-    <MainStack/>
-    //<ArticuloScreen></ArticuloScreen>
+     <MainStack/>
+    // <ArticuloScreen></ArticuloScreen>
    // <CatalogoScreen></CatalogoScreen>
     //<MenuScreen></MenuScreen>
-    //<EditarArtScreen></EditarArtScreen>
+    // <EditarArtScreen></EditarArtScreen>
   //  <LoginScreen></LoginScreen>
     //<LoginScreen></LoginScreen>
   );
