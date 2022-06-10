@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 
 const productService = require('../services/productService');
 
 export default function ArticuloScreen({route}) {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const [product, setProduct] = useState({});
   const { idProduct } = route.params;
   
   useEffect(() => {
     getProduct()
-  }, [])
+  }, [isFocused])
 
   const getProduct = async() => {
     // Obtener datos con la API y pasarlos a setProduct

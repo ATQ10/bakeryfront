@@ -23,61 +23,94 @@ export default function EditarArtScreen({route}) {
 
   var pId = "";
 
+
+  // Checar si llega un parametro con el id
   try{
     if (route.params.idProduct != undefined) {
-    if( route.params != undefined){
-      const { idProduct } = route.params;
-      pId = idProduct
+      if( route.params != undefined){
+        const { idProduct } = route.params;
+        pId = idProduct
+      }
     }
-  }
   }catch{
     pId = "-1"
   }
 
-  function createProduct(titulo, url, desc, precio, ingredientes, origen){
+  const createProduct = async() => {
     const p = {
-      "Name": titulo, 
+      "Name": name, 
       "Img": url,
       "Description": desc,
-      "Price": precio,
-      "Ingredients": ingredientes,
-      "Origin": origen,
+      "Price": Number(price),
+      "Ingredients": ing,
+      "Origin": origin,
     };
-    productService.create(p);
-    console.log("enviado");
+
+    if (pId == '-1') {
+      await productService.create(p);
+      console.log("producto creado");
+      navigation.goBack()
+    }
+    else {
+      await productService.update(pId,p);
+      console.log("producto actualizado")
+      navigation.goBack()
+    }
   }
 
+  // producto
   const [product, setProduct] = useState({});
-   var [txtURL, onChangeText0] = React.useState("");
-  var [txtTitulo, onChangeText1] = React.useState("");
-  var [txDescripcion, onChangeText2] = React.useState("");
-  var [txtPrecio, onChangeText3] = React.useState("");
-  var [txtIngredientes, onChangeText4] = React.useState("");
-  var [txtOrigen, onChangeText5] = React.useState("");   
+
+  // var [txtURL, onChangeText0] = React.useState("");
+  // var [txtTitulo, onChangeText1] = React.useState("");
+  // var [txDescripcion, onChangeText2] = React.useState("");
+  // var [txtPrecio, onChangeText3] = React.useState("");
+  // var [txtIngredientes, onChangeText4] = React.useState("");
+  // var [txtOrigen, onChangeText5] = React.useState("");  
+  
+  const [name, setName] = useState("")
+  const [url, setURL] = useState("")
+  const [desc, setDesc] = useState("")
+  const [price, setPrice] = useState("")
+  const [ing, setIng] = useState("")
+  const [origin, setOrigin] = useState("")
+
 
     useEffect(() => {
       getProduct()
     }, [])
   
+    var i = 0;
     const getProduct = async() => {
       // Obtener datos con la API y pasarlos a setProduct por ID
-      const prod = await productService.getByID(pId);
-      txtTitulo = prod.Name;
-      txtURL = prod.Img;
-      txtTitulo = prod.Name;
-      txtURL = prod.Img;
-      txDescripcion = prod.Description;
-      txtPrecio = "$"+prod.Price;
-      txtIngredientes = prod.Ingredients;
-      txtOrigen = prod.Origin;
-      setProduct(
-          prod
-      )
+      if(i==0) {
+        var prod = {}
+        console.log(pId)
+        if(pId != '-1') {
+          prod = await productService.getByID(pId);
+        }
+        else {
+          prod = {
+            Name: "",
+            Img: "https://cutewallpaper.org/24/no-image-png/757119977.jpg",
+            Description: "",
+            Price: 0,
+            Ingredients: "",
+            Origin: ""
+          }
+        }        
+        console.log(prod)
+        setProduct(prod)
+        setName(product.Name)
+        setURL(product.Img)
+        setDesc(product.Description)
+        setPrice(JSON.stringify(product.Price))
+        setIng(product.Ingredients)
+        setOrigin(product.Origin)
+        i++
+      }
     }  
     
-  
-
-  
   const goBack = () => {
     navigation.goBack()
   }
@@ -93,7 +126,7 @@ export default function EditarArtScreen({route}) {
           <Image
           style={ArticuloStyle.imageStyle}
           source={{
-            uri: txtURL!="" ? checkValidUrl(txtURL):'https://cutewallpaper.org/24/no-image-png/757119977.jpg',
+            uri: product.Img !="" ? checkValidUrl(product.Img):'https://cutewallpaper.org/24/no-image-png/757119977.jpg',
           }}
           />
       
@@ -102,17 +135,19 @@ export default function EditarArtScreen({route}) {
           <View style={{flex: 1,flexDirection: 'row',alignItems: 'center'}}>
             <TextInput
               style={EditarArtStyles.inputTitle}
-              onChangeText={onChangeText1}
-              value={txtTitulo}
+              onChangeText={(val) => setName(val)}
+              defaultValue={product.Name}
               placeholder="Nombre"
               keyboardType="default"
+              editable={true}
             />
             <TextInput
               style={EditarArtStyles.inputURL}
-              onChangeText={onChangeText0}
-              value={txtURL}
+              onChangeText={(val) => setURL(val)}
+              defaultValue={product.Img}
               placeholder="URL de la imagen"
               keyboardType="default"
+              editable={true}
             />
           
           </View>
@@ -120,10 +155,11 @@ export default function EditarArtScreen({route}) {
             <Text style={ArticuloStyle.titleRowInfo}>Descripcion:</Text>
             <TextInput
               style={EditarArtStyles.input}
-              onChangeText={onChangeText2}
-              value={txDescripcion}
+              onChangeText={(val) => setDesc(val)}
+              defaultValue={product.Description}
               placeholder="Dona de chocolate..."
               keyboardType="default"
+              editable={true}
             />
           </View>
           <View style={ArticuloStyle.rowInfo}>
@@ -132,10 +168,11 @@ export default function EditarArtScreen({route}) {
             </Text>
             <TextInput
               style={EditarArtStyles.input}
-              onChangeText={onChangeText3}
-              value={txtPrecio}
+              onChangeText={(val) => setPrice(val)}
+              defaultValue={JSON.stringify(product.Price)}
               placeholder="19"
               keyboardType="numeric"
+              editable={true}
             />
           </View>
           <View style={ArticuloStyle.rowInfo}>
@@ -144,10 +181,11 @@ export default function EditarArtScreen({route}) {
             </Text>
             <TextInput
               style={EditarArtStyles.input}
-              onChangeText={onChangeText4}
-              value={txtIngredientes}
+              onChangeText={(val) => setIng(val)}
+              defaultValue={product.Ingredients}
               placeholder="Harina, huevo..."
               keyboardType="default"
+              editable={true}
             />
           </View>
           <View style={ArticuloStyle.rowInfo}>
@@ -156,16 +194,15 @@ export default function EditarArtScreen({route}) {
             </Text>
             <TextInput
               style={EditarArtStyles.input}
-              onChangeText={onChangeText5}
-              value={txtOrigen}
+              onChangeText={(val) => setOrigin(val)}
+              defaultValue={product.Origin}
               placeholder="Traida de..."
               keyboardType="default"
+              editable={true}
             />
           </View>
         <View style={ArticuloStyle.buttons}>
-          <TouchableOpacity style={ArticuloStyle.touchableStyle}
-            //onPress={createProduct( txtTitulo, txtURL, txDescripcion, txtPrecio, txtIngredientes, txtOrigen)}
-            onPress={() => {createProduct( txtTitulo, txtURL, txDescripcion, txtPrecio, txtIngredientes, txtOrigen)}}>
+          <TouchableOpacity style={ArticuloStyle.touchableStyle} onPress={createProduct}>
             <Text style={ArticuloStyle.touchableText}>Guardar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={ArticuloStyle.touchableStyle}>
