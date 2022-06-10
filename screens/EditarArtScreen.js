@@ -20,7 +20,13 @@ function checkValidUrl (url) {
 export default function EditarArtScreen({route}) {
 
   const navigation = useNavigation();
-  const { idProduct } = route.params;
+
+  var pId = "";
+
+  if (route.params.idProduct) {
+    const { idProduct } = route.params;
+    pId = idProduct
+  }
 
   function createProduct(titulo, url, desc, precio, ingredientes, origen){
     const p = {
@@ -43,7 +49,7 @@ export default function EditarArtScreen({route}) {
   
     const getProduct = async() => {
       // Obtener datos con la API y pasarlos a setProduct por ID
-      const prod = await productService.getByID(idProduct);
+      const prod = await productService.getByID(pId);
       setProduct(
           prod
       )

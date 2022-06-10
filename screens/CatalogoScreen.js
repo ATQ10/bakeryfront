@@ -41,6 +41,10 @@ export default function CatalogoScreen() {
         navigation.navigate('ProductDetails',{idProduct: id})
     }
 
+    const openNewProduct = () => {
+        navigation.navigate('EditProduct')
+    }
+
     const renderItem = ({item}) => (
         <View style={styles.card}>
             <Image style={styles.imgProduct}source={{ uri: item.urlImg } } />
@@ -62,7 +66,7 @@ export default function CatalogoScreen() {
                     </TouchableOpacity>
                     <Text style={styles.title}>Catálogo</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={openNewProduct}>
                     <Text style={styles.title}>+</Text>
                 </TouchableOpacity>
             </View>
