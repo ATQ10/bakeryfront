@@ -23,9 +23,15 @@ export default function EditarArtScreen({route}) {
 
   var pId = "";
 
-  if (route.params.idProduct) {
-    const { idProduct } = route.params;
-    pId = idProduct
+  try{
+    if (route.params.idProduct != undefined) {
+    if( route.params != undefined){
+      const { idProduct } = route.params;
+      pId = idProduct
+    }
+  }
+  }catch{
+    pId = "-1"
   }
 
   function createProduct(titulo, url, desc, precio, ingredientes, origen){
@@ -42,7 +48,13 @@ export default function EditarArtScreen({route}) {
   }
 
   const [product, setProduct] = useState({});
-  
+   var [txtURL, onChangeText0] = React.useState("");
+  var [txtTitulo, onChangeText1] = React.useState("");
+  var [txDescripcion, onChangeText2] = React.useState("");
+  var [txtPrecio, onChangeText3] = React.useState("");
+  var [txtIngredientes, onChangeText4] = React.useState("");
+  var [txtOrigen, onChangeText5] = React.useState("");   
+
     useEffect(() => {
       getProduct()
     }, [])
@@ -50,33 +62,25 @@ export default function EditarArtScreen({route}) {
     const getProduct = async() => {
       // Obtener datos con la API y pasarlos a setProduct por ID
       const prod = await productService.getByID(pId);
+      txtTitulo = prod.Name;
+      txtURL = prod.Img;
+      txtTitulo = prod.Name;
+      txtURL = prod.Img;
+      txDescripcion = prod.Description;
+      txtPrecio = "$"+prod.Price;
+      txtIngredientes = prod.Ingredients;
+      txtOrigen = prod.Origin;
       setProduct(
           prod
       )
     }  
     
   
-  var [txtURL, onChangeText0] = React.useState(null);
-  var [txtTitulo, onChangeText1] = React.useState(null);
-  var [txDescripcion, onChangeText2] = React.useState(null);
-  var [txtPrecio, onChangeText3] = React.useState(null);
-  var [txtIngredientes, onChangeText4] = React.useState(null);
-  var [txtOrigen, onChangeText5] = React.useState(null);  
+
   
   const goBack = () => {
     navigation.goBack()
   }
-
-    // createProduct(p);
-    
-  /*
-  txtTitulo = product.Name;
-  txtURL = product.Img;
-  txDescripcion = product.Description;
-  txtPrecio = "$"+product.Price;
-  txtIngredientes = product.Ingredients;
-  txtOrigen = product.Origin;
-  */
 
     return (
       <View style={ArticuloStyle.container}>
