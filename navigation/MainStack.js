@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import MenuScreen from '../screens/MenuScreen';
 import CatalogoScreen from '../screens/CatalogoScreen';
 import ArticuloScreen from '../screens/ArticuloScreen';
+import EditarArtScreen from '../screens/EditarArtScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,7 +50,14 @@ export default function MainStack(){
               options={{
               headerShown: false
               }}
-            />   
+            />
+            <Stack.Screen
+              name='EditProduct'
+              component={ EditarArtScreen }
+              options={{
+              headerShown: false
+              }}
+            />    
           </Stack.Navigator>
       </NavigationContainer>
   );

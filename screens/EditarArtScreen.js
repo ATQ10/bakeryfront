@@ -1,6 +1,7 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
-import Constants from 'expo-constants';
+import {useNavigation} from '@react-navigation/native';
+
 const productService = require('../services/productService');
 
 function checkValidUrl (url) {
@@ -16,7 +17,10 @@ function checkValidUrl (url) {
   
 }
 
-export default function EditarArtScreen() {
+export default function EditarArtScreen({route}) {
+
+  const navigation = useNavigation();
+  const { idProduct } = route.params;
 
   const [product, setProduct] = useState({});
   
@@ -26,7 +30,7 @@ export default function EditarArtScreen() {
   
     const getProduct = async() => {
       // Obtener datos con la API y pasarlos a setProduct por ID
-      const prod = await productService.getByID("629fa5268fe58566d06f7e22");
+      const prod = await productService.getByID(idProduct);
       setProduct(
           prod
       )
@@ -39,7 +43,9 @@ export default function EditarArtScreen() {
   var [txtIngredientes, onChangeText4] = React.useState(null);
   var [txtOrigen, onChangeText5] = React.useState(null);  
   
-  
+  const goBack = () => {
+    navigation.goBack()
+  }
 
   /*
   txtTitulo = product.Name;
@@ -51,7 +57,11 @@ export default function EditarArtScreen() {
   */
     return (
       <View style={ArticuloStyle.container}>
-        <View style={ArticuloStyle.header}></View>
+        <View style={ArticuloStyle.header}>
+          <TouchableOpacity onPress={goBack}>
+            <Text style={ArticuloStyle.title2}>&lt;</Text>
+          </TouchableOpacity>
+        </View>
         <View style={ArticuloStyle.image}>
           <Image
           style={ArticuloStyle.imageStyle}
@@ -144,11 +154,16 @@ const ArticuloStyle = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
+  title2: {
+    color: "#fff",
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
   header: {
     flex: 2,
     backgroundColor: '#7D4F50',
-    alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 25
   },
   image: {
     flex: 4,

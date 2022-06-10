@@ -1,6 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import {useNavigation, NavigationContainer} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const productService = require('../services/productService');
 
@@ -23,6 +23,17 @@ export default function ArticuloScreen({route}) {
 
   const goBack = () => {
     navigation.goBack()
+  }
+
+  const openEditProduct = (id) => {
+    console.log(id)
+    navigation.navigate('EditProduct',{idProduct: id})
+  }
+
+  const deleteProduct = async(id) => {
+    await productService.remove(id);
+    alert('Producto Eliminado!')
+    navigation.goBack();
   }
 
   return (
@@ -75,10 +86,10 @@ export default function ArticuloScreen({route}) {
             </Text>
           </View>
         <View style={ArticuloStyle.buttons}>
-          <TouchableOpacity style={ArticuloStyle.touchableStyle}>
+          <TouchableOpacity style={ArticuloStyle.touchableStyle} onPress={() => {openEditProduct(product._id)}}>
             <Text style={ArticuloStyle.touchableText}>Editar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={ArticuloStyle.touchableStyle}>
+          <TouchableOpacity style={ArticuloStyle.touchableStyle} onPress={() => {deleteProduct(product._id)}}>
             <Text style={ArticuloStyle.touchableText}>Eliminar</Text>
           </TouchableOpacity>
         </View>

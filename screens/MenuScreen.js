@@ -1,6 +1,6 @@
 import { Text, View, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Icon
@@ -13,7 +13,8 @@ import inventoryImg from '../assets/inventory.jpg'
 
 export default function MenuScreen() {
     const productService = require('../services/productService');
-
+    
+    const isFocused = useIsFocused();
     const navigation = useNavigation();
     
     const [user, setUser] = useState({})
@@ -21,7 +22,7 @@ export default function MenuScreen() {
     useEffect(() => {
         getUser()
         getProducts()
-    }, [])
+    }, [isFocused])
     
     const getUser = async() => {
         // Obtener datos con la API y pasarlos a setUser

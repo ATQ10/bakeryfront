@@ -1,12 +1,13 @@
 import { Text, View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { Component, useState, useEffect } from 'react'
-import {useNavigation} from '@react-navigation/native';
+import React, { useState, useEffect } from 'react'
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 
 export default function CatalogoScreen() {
     const productService = require('../services/productService');
 
     const [listProducts, setListProducts] = useState([])
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
     const goBack = () => {
         navigation.goBack()
@@ -14,7 +15,7 @@ export default function CatalogoScreen() {
 
     useEffect(() => {
         getProducts()
-    }, [])
+    }, [isFocused])
 
     const getProducts = async() => {
         // Obtener datos con la API y pasarlos a setList
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        paddingBottom: 30
     },
 
     header:  {
@@ -115,7 +117,8 @@ const styles = StyleSheet.create({
     products:  {
         flex: 1,
         paddingHorizontal: 25,
-        paddingVertical: 30
+        paddingVertical: 30,
+        marginBottom: 10
     },
 
     card:  {
