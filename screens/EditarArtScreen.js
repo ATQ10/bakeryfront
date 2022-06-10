@@ -36,28 +36,6 @@ export default function EditarArtScreen({route}) {
     pId = "-1"
   }
 
-  const createProduct = async() => {
-    const p = {
-      "Name": name, 
-      "Img": url,
-      "Description": desc,
-      "Price": Number(price),
-      "Ingredients": ing,
-      "Origin": origin,
-    };
-
-    if (pId == '-1') {
-      await productService.create(p);
-      console.log("producto creado");
-      navigation.goBack()
-    }
-    else {
-      await productService.update(pId,p);
-      console.log("producto actualizado")
-      navigation.goBack()
-    }
-  }
-
   // producto
   const [product, setProduct] = useState({});
 
@@ -69,12 +47,41 @@ export default function EditarArtScreen({route}) {
   // var [txtOrigen, onChangeText5] = React.useState("");  
   
   const [name, setName] = useState("")
-  const [url, setURL] = useState("")
+  const [urlImg, setURLIMG] = useState("")
   const [desc, setDesc] = useState("")
   const [price, setPrice] = useState("")
   const [ing, setIng] = useState("")
   const [origin, setOrigin] = useState("")
 
+  const createProduct = async() => {
+    const p = {
+      "Name": name, 
+      "Img": urlImg,
+      "Description": desc,
+      "Price": price,
+      "Ingredients": ing,
+      "Origin": origin,
+    };
+
+    if (pId == '-1') {
+      console.log(p)
+      if(p.Img == undefined || p.Img == "") {
+        p.Img = "https://cutewallpaper.org/24/no-image-png/757119977.jpg";
+      }
+
+      if(p.Price== undefined || p.Price == "") {
+        p.Price = 0;
+      }
+      await productService.create(p);
+      console.log("producto creado");
+      navigation.goBack()
+    }
+    else {
+      await productService.update(pId,p);
+      console.log("producto actualizado")
+      navigation.goBack()
+    }
+  }
 
     useEffect(() => {
       getProduct()
@@ -85,7 +92,6 @@ export default function EditarArtScreen({route}) {
       // Obtener datos con la API y pasarlos a setProduct por ID
       if(i==0) {
         var prod = {}
-        console.log(pId)
         if(pId != '-1') {
           prod = await productService.getByID(pId);
         }
@@ -102,11 +108,13 @@ export default function EditarArtScreen({route}) {
         console.log(prod)
         setProduct(prod)
         setName(product.Name)
-        setURL(product.Img)
+        setURLIMG(product.Img)
         setDesc(product.Description)
-        setPrice(JSON.stringify(product.Price))
+        setPrice(product.Price)
         setIng(product.Ingredients)
         setOrigin(product.Origin)
+        console.log(urlImg)
+        console.log(price)
         i++
       }
     }  
@@ -143,7 +151,7 @@ export default function EditarArtScreen({route}) {
             />
             <TextInput
               style={EditarArtStyles.inputURL}
-              onChangeText={(val) => setURL(val)}
+              onChangeText={(val) => setURLIMG(val)}
               defaultValue={product.Img}
               placeholder="URL de la imagen"
               keyboardType="default"
@@ -205,7 +213,7 @@ export default function EditarArtScreen({route}) {
           <TouchableOpacity style={ArticuloStyle.touchableStyle} onPress={createProduct}>
             <Text style={ArticuloStyle.touchableText}>Guardar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={ArticuloStyle.touchableStyle}>
+          <TouchableOpacity style={ArticuloStyle.touchableStyle} onPress={goBack}>
             <Text style={ArticuloStyle.touchableText}>Salir</Text>
           </TouchableOpacity>
         </View>

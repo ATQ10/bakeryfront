@@ -44,7 +44,6 @@ module.exports = {
     getAll: async function() {
         const response = await fetch('http://'+IP+'/api/product/getAll');
         const products = await response.json();
-        console.log("getAll: ",products);
         return products;
     },
     update: async function (id, product) {

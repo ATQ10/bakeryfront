@@ -37,7 +37,6 @@ export default function CatalogoScreen() {
     }
 
     const openProduct = (id) => {
-        console.log(id)
         navigation.navigate('ProductDetails',{idProduct: id})
     }
 
